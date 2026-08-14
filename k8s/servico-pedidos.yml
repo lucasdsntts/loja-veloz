@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: servico-pedidos
+  labels:
+    app: servico-pedidos
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: servico-pedidos
+  template:
+    metadata:
+      labels:
+        app: servico-pedidos
+    spec:
+      containers:
+      - name: pedidos
+        image: loja-veloz/servico-pedidos:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: config-loja
+        - secretRef:
+            name: secret-loja
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: servico-pedidos
+spec:
+  type: ClusterIP
+  selector:
+    app: servico-pedidos
+  ports:
+  - port: 8080
+    targetPort: 8080

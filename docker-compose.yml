@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686" # Interface Web do Jaeger
+      - "4317:4317"   # Porta OTLP gRPC
+      - "4318:4318"   # Porta OTLP HTTP
+    restart: always
+
+  api-gateway:
+    build:
+      context: ./microservicos/api-gateway
+      dockerfile: Dockerfile
+    image: loja-veloz/api-gateway:v1.0.0
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - OTEL_SERVICE_NAME=api-gateway
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318/v1/traces
+    depends_on:
+      - jaeger
+    restart: always
+
+  servico-pedidos:
+    build:
+      context: ./microservicos/servico-pedidos
+      dockerfile: Dockerfile
+    image: loja-veloz/servico-pedidos:v1.0.0
+    container_name: servico-pedidos
+    ports:
+      - "3001:8080"
+    environment:
+      - OTEL_SERVICE_NAME=servico-pedidos
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318/v1/traces
+    depends_on:
+      - jaeger
+    restart: always
+
+  servico-pagamentos:
+    build:
+      context: ./microservicos/servico-pagamentos
+      dockerfile: Dockerfile
+    image: loja-veloz/servico-pagamentos:v1.0.0
+    container_name: servico-pagamentos
+    ports:
+      - "3002:8080"
+    environment:
+      - OTEL_SERVICE_NAME=servico-pagamentos
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318/v1/traces
+    depends_on:
+      - jaeger
+    restart: always
+
+  servico-estoque:
+    build:
+      context: ./microservicos/servico-estoque
+      dockerfile: Dockerfile
+    image: loja-veloz/servico-estoque:v1.0.0
+    container_name: servico-estoque
+    ports:
+      - "3003:8080"
+    environment:
+      - OTEL_SERVICE_NAME=servico-estoque
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318/v1/traces
+    depends_on:
+      - jaeger
+    restart: always
