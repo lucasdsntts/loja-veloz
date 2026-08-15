@@ -16,13 +16,13 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: loja-veloz/api-gateway:v1.0.0  # CORRIGIDO: adicionado '0' no final da tag
+        image: loja-veloz/api-gateway:v1.0.0  
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         envFrom:
         - configMapRef:
-            name: config-loja          # CORRIGIDO: apontado para o nome do seu configmap
+            name: config-loja          
         resources:
           requests:
             memory: "128Mi"

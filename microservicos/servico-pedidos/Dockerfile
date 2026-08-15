@@ -1,4 +1,4 @@
-# Multi-stage build para imagem final enxuta
+# Multi-stage build
 FROM node:18-alpine AS builder
 WORKDIR /usr/src/app
 COPY package*.json ./
