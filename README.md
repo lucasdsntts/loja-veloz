@@ -14,3 +14,7 @@ Sistema de e-commerce baseado em microsserviços, desenvolvido para demonstrar a
 ## 📺 Demonstração em Vídeo
 Assista à demonstração técnica completa do sistema em funcionamento:
 👉 [Assistir à Apresentação no YouTube](https://youtu.be/2A5Q6eaQ_B4?is=EneYNrof5DuzxOPL)
+
+## 💻 Repositório do Projeto
+Explore o código-fonte, a estrutura de microsserviços e as configurações da esteira CI/CD:
+👉 [Acesse o Repositório no GitHub](https://github.com/lucasdsntts/loja-veloz)
