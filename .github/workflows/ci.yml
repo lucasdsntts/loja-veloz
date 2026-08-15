@@ -41,6 +41,7 @@ jobs:
 
     - name: Aplicar Manifestos no Cluster
       run: |
+        kubectl config use-context docker-desktop
         kubectl apply -f k8s/
         kubectl set image deployment/servico-pedidos pedidos=${{ secrets.DOCKER_USERNAME }}/servico-pedidos:${{ github.sha }}
         kubectl set image deployment/api-gateway gateway=${{ secrets.DOCKER_USERNAME }}/api-gateway:${{ github.sha }}
