@@ -37,7 +37,7 @@ jobs:
     - name: Configurar Contexto K8s
       uses: azure/k8s-set-context@v3
       with:
-        kubeconfig: ${{ secrets.KUBECONFIG }}
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
     - name: Aplicar Manifestos no Cluster
       run: |
